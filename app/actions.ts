@@ -1,6 +1,7 @@
 "use server";
 
 import axios from "axios";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 const RPC_URL = "https://api.mainnet.abs.xyz";
 
@@ -37,13 +38,21 @@ export async function fetchTransactionCountAction(address: string): Promise<numb
   try {
     const explorerUrl = `https://abscan.org/address/${address}`;
     
-    const response = await axios.get(explorerUrl, {
+    const config: any = {
       headers: {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
       },
       timeout: 5000
-    });
+    };
+
+    // Add Proxy support if env var is set
+    if (process.env.PROXY_URL) {
+      config.httpsAgent = new HttpsProxyAgent(process.env.PROXY_URL);
+      config.proxy = false; // Disable axios default proxy handling
+    }
+    
+    const response = await axios.get(explorerUrl, config);
 
     const html = response.data;
     const match = html.match(/Transactions:\s*([\d,]+)/);

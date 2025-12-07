@@ -10,7 +10,11 @@ A simple and efficient tool designed to track transaction counts for multiple sm
 - **Accurate Data**: Utilizes a hybrid strategy (Scraping + RPC) to ensure "Total" counts (incoming + outgoing) are captured accurately.
 - **Total Sum**: Instantly view the aggregate transaction volume across all tracked contracts.
 - **Persistence**: Your list of contracts is automatically saved to your browser's local storage.
-- **Clean UI**: Built with Next.js, Shadcn UI, and Tailwind CSS for a modern, responsive experience.
+- **Proxy Support**: Bypass Cloudflare blocking on Vercel by configuring a proxy.
+
+> [!WARNING]
+> **Hosted Version Limitations**: The hosted version of this application may not work as expected because the transaction count retrieval relies on scraping the Abstract Explorer. When triggered from a cloud environment (like Vercel), this traffic is often identified as a bot and blocked by security services (e.g., Cloudflare). For reliable usage, run the application locally or ensure you have a robust residential proxy configured.
+
 
 ## Getting Started
 
@@ -25,12 +29,27 @@ A simple and efficient tool designed to track transaction counts for multiple sm
     ```
 4.  Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deployment
+## Deployment & Proxy Configuration
 
-### Vercel
+### Vercel Deployment
 
-The easiest way to deploy is to use the [Vercel Platform](https://vercel.com/new).
-
-1.  Push your code to a GitHub repository.
+1.  Push your code to GitHub.
 2.  Import the project into Vercel.
-3.  Vercel will automatically detect Next.js and deploy.
+3.  **Important**: To make scraping work on Vercel (bypassing Cloudflare), you must add a **Environment Variable**:
+    -   **Name**: `PROXY_URL`
+    -   **Value**: Your proxy connection string (e.g., `http://user:pass@proxy.com:port`).
+
+    *Note: You will need to obtain a residential proxy from a provider like Bright Data, Smartproxy, or Oxylabs.*
+
+### GitHub
+
+1.  Create a new repository on GitHub.
+2.  Push your local code:
+    ```bash
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git branch -M main
+    git remote add origin <your-repo-url>
+    git push -u origin main
+    ```
